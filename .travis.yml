@@ -6,18 +6,18 @@ services:
   - docker
 
 before_install:
-  -  docker build -f ./client/Dockerfile.dev -t complex-frontend:test ./client
+  - docker build -f ./client/Dockerfile.dev -t complex-frontend:test ./client
 
 script:
   - docker run -e CI=true complex-frontend:test npm run test
 
 after_success:
-  - docker build -t complex:clientprod1 ./client
-  - docker build -t complex:serverprod1 ./server
-  - docker build -t complex:workerprod1 ./worker
-  - docker build -t complex:nginxprod1 ./nginx
+  - docker build -t abhishekkalahal/complex-client ./client
+  - docker build -t abhishekkalahal/complex-server ./server
+  - docker build -t abhishekkalahal/complex-worker ./worker
+  - docker build -t abhishekkalahal/complex-nginx ./nginx
   - echo "$docker_password" | docker login -u "$docker_uname" --password-stdin
-  - docker push complex:clientprod1
-  - docker push complex:serverprod1
-  - docker push complex:workerprod1
-  - docker push complex:nginxprod1
+  - docker push abhishekkalahal/complex-client
+  - docker push abhishekkalahal/complex-server
+  - docker push abhishekkalahal/complex-worker
+  - docker push abhishekkalahal/complex-nginx
