@@ -1,0 +1,23 @@
+language: generic
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  -  docker build -f ./client/Dockerfile.dev -t complex-frontend:test ./client
+
+script:
+  - docker run -e CI=true complex-frontend:test npm run test
+
+after_success:
+  - docker build -t complex:clientprod1 ./client
+  - docker build -t complex:serverprod1 ./server
+  - docker build -t complex:workerprod1 ./worker
+  - docker build -t complex:nginxprod1 ./nginx
+  - echo "$docker_password" | docker login -u "$docker_uname" --password-stdin
+  - docker push complex:clientprod1
+  - docker push complex:serverprod1
+  - docker push complex:workerprod1
+  - docker push complex:nginxprod1
